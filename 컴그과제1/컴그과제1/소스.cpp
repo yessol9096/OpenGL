@@ -2,7 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <iostream>
-
+#include <stdlib.h>
+#include <ctime>
 using namespace std;
 
 
@@ -18,7 +19,7 @@ bool rotateX = false;
 bool rotateY = false;
 bool rotateZ = false;
 bool rotate = false;
-
+bool newrectangle = false;
 bool Cut = false;
 bool Disappear = false;
 bool Animation = false;
@@ -41,6 +42,7 @@ enum class Dir {
 	, Left	// 왼쪽으로
 	, Down	// 떨어지기
 	, Stop
+	, Cover_stop
 	, c_Right	// 오른쪽으로
 	, c_Left	// 왼쪽으로
 };
@@ -78,14 +80,16 @@ bool compare(float upX , float downX, int rx1, int ry1, int rx2, int ry2, int rx
 }
 
 
-bool Collision(float left1, float right1, float top1, float bottom1, float left2, float right2, float top2, float bottom2)
+int Collision(float left1, float right1, float top1, float bottom1, float left2, float right2, float top2, float bottom2)
 {
-	if (left1 < right2 && top1 < bottom2 && right1 > left2 && bottom1 > top2)
+	if (left1 < right2 && top1 < bottom2 && right1 > left2 && bottom1 > top2 )
 	{
-		return true;
+		if (left1 < left2) return 2;
+		else if (right1 > right2) return 3;
+		else
+		return 1;
 	}
-	else
-		return false;
+	else return 4;
 }
 
 
@@ -143,6 +147,7 @@ public:
 		else if (dir == Dir::Right) { moveX += 15;  if (moveX > 800 - 140 && Disappear == false) dir = Dir::Left; }
 		else if (dir == Dir::Left) { moveX -= 15;  if (moveX < 140 && Disappear == false) dir = Dir::Right; }
 		else if (dir == Dir::Stop) { moveY = 300;}
+		else if (dir == Dir::Cover_stop) { moveY = 230; }
 	}
 
 	void collision_move(Dir dir, float basketX)
@@ -305,11 +310,26 @@ void main(int argc, char *argv[])
 
 GLvoid drawScene(GLvoid)
 {
+	srand(time(NULL));
+	int randNumX = (rand() % 20 + 1);
+	int randNumY = (rand() % 20 + 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	glLoadIdentity();
-
-	if (MouseUp == false) { rectangle.set(-80, 110, -80, 170, 80, 170, 80, 110); }
+	int c_menu;
+	if (newrectangle == true) { 
+		rectangle.set(-(80 + randNumX), 110 - randNumY, -(80 + randNumX), 170 + randNumY, 80 + randNumX, 170 + randNumY, 80 + randNumX, 110 - randNumY);
+		small.set(0,0,0,0,0,0,0,0);
+		collision_move = false;
+		rectangle.Disappear = false;
+		small.dir = rectangle.dir;
+		m_xy[0].x = 0; m_xy[0].y = 0;
+		m_xy[1].x = 0; m_xy[1].y = 0;
+		rectangle.moveX = 0;
+		rectangle.moveY = 0;
+		small.moveX = 120;
+		small.moveY = 0;
+		newrectangle = false; }
 	else if (Cut == true)
 	{
 		rectangle.Disappear = true;
@@ -333,26 +353,43 @@ GLvoid drawScene(GLvoid)
 	rectangle.drawline();
 	rectangle.draw(); 
 	//// 대각선 그리기
+	if (newrectangle != true)
+	{
 		glBegin(GL_LINES);
 		glColor3f(0.0f, 0.0f, 0.0f);
 		glVertex2f(m_xy[0].x + rectangle.moveX, m_xy[0].y);
 		glVertex2f(m_xy[1].x + rectangle.moveX, m_xy[1].y);
 		glEnd();
-		if (Collision(small.rx1 + small.moveX, small.rx3 + small.moveX, small.ry1 + small.moveY, small.ry3 + small.moveY, basket.wx1 + basket.moveX, basket.wx3 + basket.moveX, 400, 500) == true)
+	}
+		c_menu = Collision(small.rx1 + small.moveX, small.rx3 + small.moveX, small.ry1 + small.moveY, small.ry3 + small.moveY, basket.wx1 + basket.moveX, basket.wx3 + basket.moveX, 400, 500);
+		if ( c_menu == 1)
 		{
-			cout << "collision" << endl;
 			small.Disappear = false;
 			if (small.dir == Dir::Stop)
 			{
 				collision_move = true;
 			}
 		}
-		else
+		else if (c_menu == 2) { 
+			small.Disappear = false; small.dir = Dir::Cover_stop; 
+			if (small.dir == Dir::Cover_stop)
+		{
+			collision_move = true;
+		}
+		}
+		else if (c_menu == 3) {
+			small.Disappear = false; small.dir = Dir::Cover_stop;
+			if (small.dir == Dir::Cover_stop)
+			{
+				collision_move = true;
+			}
+		}
+		else if (c_menu == 4)
 			small.Disappear = true;
 	small.drawline();
+	if(c_menu == 1)
 	clliping(basket.wx1 + basket.moveX, basket.wx4 + basket.moveX, basket.wy1 + basket.moveY, basket.wy2 + basket.moveY, small.rx1 + small.moveX, small.ry1 + small.moveY, small.rx2 + small.moveX, small.ry2 + small.moveY, small.rx4 + small.moveX, small.ry4 + small.moveY, small.rx3 + small.moveX, small.ry3 + small.moveY);
 	small.draw(); 
-	
 	glutSwapBuffers();
 }
 
@@ -366,7 +403,12 @@ GLvoid reshape(int w, int h)
 }
 
 void Keyboard(unsigned char key, int x, int y) {
-
+	if (key == 'q' || key == 'Q') {
+		exit(0);
+	}
+	else if (key == 'r' || key == 'R') {
+		newrectangle = true;
+	}
 	glutPostRedisplay();
 }
 
@@ -376,13 +418,15 @@ void TimerFunc(int value)
 	if (value == 1)
 	{
 		rectangle.move();
-		if(collision_move == false )small.move();
+		small.move();
+		if((small.dir != Dir::Stop && small.dir != Dir::Cover_stop)&& small.dir != Dir::Down)small.moveX = rectangle.moveX;
+
 		glutTimerFunc(100, TimerFunc, 1);
 	}
 	if (value == 2)
 	{
 		basket.move();
-		if (collision_move == true && small.dir == Dir::Stop)small.collision_move(basket.dir, basket.moveX);
+		if (collision_move == true && (small.dir == Dir::Stop || small.dir == Dir::Cover_stop))small.collision_move(basket.dir, basket.moveX);
 		glutTimerFunc(600, TimerFunc, 2);
 	}
 	glutPostRedisplay();

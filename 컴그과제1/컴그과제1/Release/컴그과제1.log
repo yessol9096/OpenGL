@@ -1,6 +1,8 @@
 ﻿  소스.cpp
   코드를 생성하고 있습니다.
-  All 9 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  37 of 37 functions (100.0%) were compiled, the rest were copied from previous compilation.
+    29 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
 glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
 glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
@@ -13,4 +15,6 @@ glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 �
 glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
 glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
 glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
-C:\Users\dpthf\documents\visual studio 2017\Projects\컴그과제1\Release\컴그과제1.exe : fatal error LNK1281: SAFESEH 이미지를 생성할 수 없습니다.
+glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
+glut32.lib(glut32.dll) : error LNK2026: 모듈이 SAFESEH 이미지에 대해 안전하지 않습니다.
+C:\Users\dpthf\Documents\GitHub\OpenGL\컴그과제1\Release\컴그과제1.exe : fatal error LNK1281: SAFESEH 이미지를 생성할 수 없습니다.
