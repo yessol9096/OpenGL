@@ -46,15 +46,16 @@ public:
 
 
 class Ball {
-	GLfloat transX;
-	GLfloat transZ;
+public:
+	GLfloat btransX;
+	GLfloat btransZ;
 
 	Dir dir = Dir::stop;
 public:
 	void draw() {
 		glColor3f(1, 0, 0.0);
 		glPushMatrix();
-			glTranslatef(transX, -100, transZ);
+			glTranslatef(btransX, -100, btransZ);
 			if (rotateX == true) { dir = Dir::x ; glRotatef(angle, 1, 0, 0); }
 			else if (rotateY == true) { dir = Dir::y; glRotatef(angle, 0, 1, 0); }
 			else if (rotateZ == true) { dir = Dir::z;  glRotatef(angle, 0, 0, 1); }
@@ -64,21 +65,7 @@ public:
 	}
 
 	void roll() {
-		if (dir == Dir::x)
-		{
-			if (transZ < 150) transZ += 5;
-		}
 	
-		else if (dir == Dir::z)
-		{
-			if (transX < 150) transX += 5;
-		}
-		else if (dir == Dir::stop)
-		{
-			transX = 0;
-			transZ = 0;
-		}
-
 	}
 }ball;
 
@@ -162,23 +149,44 @@ void Reshape(int w, int h)
 // 필요한 콜백 함수 구현: 키보드 입력, 마우스 입력, 타이머 등
 void Keyboard(unsigned char key, int x, int y)
 {
-	if (key == 'l' || key == 'L') {
+	if (key == 'l' ) {
+		if (ball.btransX < 150) ball.btransX += 5;
 		rotateX = true;
 		rotateY = false;
 		rotateZ = false;
 		stop = false;
+		angle -= 10;
+	}
+	else if (key == 'L') {
+		if (ball.btransX > -150) ball.btransX -= 5;
+		rotateX = true;
+		rotateY = false;
+		rotateZ = false;
+		stop = false;
+		angle -= 10;
 	}
 	else if (key == 'n' || key == 'N') {
 		rotateX = false;
 		rotateY = true;
 		rotateZ = false;
 		stop = false;
+		angle -= 10;
 	}
-	else if (key == 'm' || key == 'M') {
+	else if (key == 'm' ) {
+		if (ball.btransZ < 150) ball.btransZ += 5;
 		rotateX = false;
 		rotateY = false;
 		rotateZ = true;
 		stop = false;
+		angle -= 10;
+	}
+	else if ( key == 'M') {
+		if (ball.btransZ > -150) ball.btransZ -= 5;
+		rotateX = false;
+		rotateY = false;
+		rotateZ = true;
+		stop = false;
+		angle -= 10;
 	}
 	else if (key == 'i' || key == 'I') {
 		rotateX = false;
@@ -236,8 +244,6 @@ void Keyboard(unsigned char key, int x, int y)
 
 void TimerFunction(int value)
 {
-	ball.roll();
-	angle -= 10;
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 	glutTimerFunc(100, TimerFunction, 1);
 }

@@ -2,9 +2,12 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
+
 #define PI 3.141592
 void UpdateCam();
+
 int culling = 1;
+
 GLdouble cyRotate = 0.1;
 GLdouble cxRotate = 0.0;
 GLdouble czRotate = 0.0;
@@ -46,8 +49,7 @@ public:
 
 }flr;
 
-
-class RectangleTree {
+class Crain {
 public:
 	GLfloat transX;
 	GLfloat transZ;
@@ -92,8 +94,202 @@ public:
 		else if (dir == Dir::left) { transX -= 10; if (transX < -150) dir = Dir::right; }
 	}
 
+}crain;
+class Rectangle_Tree
+{
+public:
+	GLfloat rotateY;
+public:
+	void draw() {
+
+		glPushMatrix();
+		glColor3f(0.8f, 0.4f, 0.04f);
+		glTranslatef(150, -100, 300);
+		glScalef(1.0f, 2.0f, 1.0f);
+		glutSolidCube(50);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.0f, 0.4f, 0.04f);
+		glTranslatef(150, -25, 300);
+		glRotatef(rotateY, 0, 1, 0);
+		glScalef(3.0f, 1.0f, 1.0f);
+		glutSolidCube(50);
+		glPopMatrix();
+	}
+
+	void move()
+	{
+		rotateY += 10;
+	}
+
 }r_tree;
 
+class Sphere_Tree
+{
+public:
+	GLfloat size = 60;
+public:
+	void draw() {
+
+		glPushMatrix();
+		glColor3f(0.8f, 0.4f, 0.04f);
+		glTranslatef(-150, -100, 300);
+		glScalef(1.0f, 2.0f, 1.0f);
+		glutSolidCube(50);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.0f, 0.4f, 0.4f);
+		glTranslatef(-150, -25, 300);
+		glutWireSphere(size, 20, 10);
+		glPopMatrix();
+	}
+
+	void move()
+	{
+		if (size == 60) size = 50;
+		else if (size == 50) size = 60;
+	}
+
+}s_tree;
+
+class Torus
+{
+public:
+	GLfloat moveY;
+	int dir = 0;
+public:
+	void draw() {
+
+
+
+		glPushMatrix();
+		glColor3f(1.0f, 0.4f, 0.04f);
+		glTranslatef(150, -100, 100);
+		glScalef(1.0f, 4.0f, 1.0f);
+		glutSolidCube(50);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.3f, 0.8f, 0.4f);
+		glRotatef(90, 1, 0, 0);
+		glTranslatef(130, 50, moveY);
+		glutWireTorus(25, 40, 20, 20);
+		glPopMatrix();
+
+	}
+
+	void move()
+	{
+		if (dir == 0)
+		{
+			if (moveY > 100) dir = 1;
+			moveY += 10;
+		}
+		else if (dir == 1)
+		{
+			if (moveY < 0) dir = 0;
+			moveY -= 10;
+		}
+	}
+
+}torus;
+
+class Cone
+{
+public:
+	float scale = 1.0f;
+	int dir = 0;
+public:
+	void draw() {
+
+
+		glPushMatrix();
+		glColor3f(0.5f, 0.0f, 0.4f);
+		glTranslatef(-150, -105, 50);
+		glRotatef(90, 1, 0, 0);
+		glScalef(scale, scale, scale);
+		glutWireCone(25, 40, 20, 20);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.5f, 0.0f, 0.4f);
+		glTranslatef(-150, -150, 50);
+		glRotatef(-90, 1, 0, 0);
+		glScalef(1.1 - scale, 1.1 - scale, 1.1 - scale);
+		glutWireCone(25, 40, 20, 20);
+		glPopMatrix();
+
+	}
+
+	void move()
+	{
+		if (dir == 0)
+		{
+			if (scale < 0) dir = 1;
+			scale -= 0.1;
+		}
+		else if (dir == 1)
+		{
+			if (scale > 1) dir = 0;
+			scale += 0.1;
+		}
+	}
+
+}cone;
+
+class Door {
+public:
+	float move = 25;
+	float dir = 0;
+	float roateY = 0;
+	GLfloat rotateY;
+public:
+	void draw() {
+
+
+		glPushMatrix();
+		glColor3f(0.0f, 0.4f, 0.4f);
+		glTranslatef(move, -100, 180);
+		glRotatef(rotateY, 0, 1, 0);
+		glScalef(0.5f, 2.0f, 0.5f);
+		glutSolidCube(40);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.0f, 0.4f, 0.4f);
+		glTranslatef(-move, -100, 180);
+		glRotatef(rotateY, 0, 1, 0);
+		glScalef(0.5f, 2.0f, 0.5f);
+		glutSolidCube(40);
+		glPopMatrix();
+
+		glPushMatrix();
+		glColor3f(0.0f, 0.4f, 0.4f);
+		glTranslatef(0, -50, 180); glRotatef(rotateY*1.32, 0, 1, 0);
+		glScalef(2.0f, 0.5f, 0.5f);
+		glutSolidCube(40);
+		glPopMatrix();
+
+	}
+
+	void open()
+	{
+		if (dir == 0)
+		{
+			if (move < 10) dir = 1;
+			move -= 5;
+		}
+		else if (dir == 1)
+		{
+			if (move > 25) dir = 0;
+			move += 5;
+		}
+		rotateY += 10;
+	}
+
+}door;
 void SetupRC();
 void DrawScene();
 void Reshape(int w, int h);
@@ -138,8 +334,15 @@ void DrawScene()
 	glTranslatef(transX, transY, transZ);
 	// 필요한 변환 적용
 	flr.draw();											// glPushMatrix 함수를 호출하여 기존의 좌표 시스템을 저장
-														// 필요한 경우 행렬 초기화 ( glLoadIdentity ( ); )
-	crain.draw();													// 변환 적용: 이동, 회전, 신축 등 모델에 적용 할 변환 함수를 호출한다.
+	r_tree.draw();
+	s_tree.draw();												// 필요한 경우 행렬 초기화 ( glLoadIdentity ( ); 
+
+	door.draw();
+	crain.draw();
+	torus.draw();
+	cone.draw();
+
+	// 변환 적용: 이동, 회전, 신축 등 모델에 적용 할 변환 함수를 호출한다.
 
 	glPopMatrix();
 	glutSwapBuffers(); // 결과 출력
@@ -245,7 +448,14 @@ void Keyboard(unsigned char key, int x, int y)
 
 void TimerFunction(int value)
 {
+
 	crain.move();
+	cone.move();
+	door.open();
+	r_tree.move();
+	s_tree.move();
+	torus.move();
+
 	angle -= 10;
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 	glutTimerFunc(100, TimerFunction, 1);
