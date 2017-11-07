@@ -1,0 +1,55 @@
+﻿  소스.cpp
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(42): error C2065: 'rotateX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(42): warning C4805: '==': 연산에 'unknown-type' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(42): error C2065: 'angle': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(43): error C2065: 'rotateY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(43): warning C4805: '==': 연산에 'unknown-type' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(43): error C2065: 'angle': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(44): error C2065: 'rotateZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(44): warning C4805: '==': 연산에 'unknown-type' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(44): error C2065: 'angle': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(45): error C2065: 'stop': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(45): warning C4805: '==': 연산에 'unknown-type' 형식과 'bool' 형식을 함께 사용하는 것은 안전하지 않습니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(108): error C3861: 'UpdateCam': 식별자를 찾을 수 없습니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(110): error C2065: 'transX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(110): error C2065: 'transY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(110): error C2065: 'transZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(150): error C2065: 'rotateX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(151): error C2065: 'rotateY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(152): error C2065: 'rotateZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(153): error C2065: 'stop': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(156): error C2065: 'rotateX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(157): error C2065: 'rotateY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(158): error C2065: 'rotateZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(159): error C2065: 'stop': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(162): error C2065: 'rotateX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(163): error C2065: 'rotateY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(164): error C2065: 'rotateZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(165): error C2065: 'stop': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(168): error C2065: 'rotateX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(169): error C2065: 'rotateY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(170): error C2065: 'rotateZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(171): error C2065: 'stop': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(174): error C2065: 'cyRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(175): error C2065: 'cxRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(176): error C2065: 'czRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(178): error C2065: 'transX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(179): error C2065: 'transY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(180): error C2065: 'transZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(183): error C2065: 'cyRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(186): error C2065: 'cyRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(189): error C2065: 'cxRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(192): error C2065: 'cxRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(195): error C2065: 'czRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(198): error C2065: 'czRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(201): error C2065: 'transX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(204): error C2065: 'transX': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(207): error C2065: 'transY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(210): error C2065: 'transY': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(213): error C2065: 'transZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(216): error C2065: 'transZ': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(224): error C2065: 'angle': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(242): error C2065: 'czRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(245): error C2065: 'cxRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(245): error C2065: 'cyRotate': 선언되지 않은 식별자입니다.
+c:\users\dpthf\documents\github\opengl\컴그실습\컴그실습\소스.cpp(249): error C2065: 'czRotate': 선언되지 않은 식별자입니다.

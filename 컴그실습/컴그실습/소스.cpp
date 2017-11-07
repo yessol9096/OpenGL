@@ -3,29 +3,22 @@
 #include <stdlib.h>
 #include <ctime>
 #define PI 3.141592
-void UpdateCam();
-int culling = 1;
-GLdouble cyRotate = 0.1;
-GLdouble cxRotate = 0.0;
-GLdouble czRotate = 0.0;
-float angle = 0.0;
 
+enum class Fig {
+	sphere	// 구 
+	, cube	//직육면체
+	, cone	// 원뿔
+	, teapot // 주전자
+}fig;
+float angle = 0.0;
 bool rotateX = false;
 bool rotateY = false;
 bool rotateZ = false;
-bool stop = false;
+bool rotateL = false;
+bool rotateR = false;
 bool rotate = false;
-
-float transX = 0.0;
-float transY = 0.0;
-float transZ = 0.0;
-int random;
-enum class Dir {
-	x,
-	z,
-	y,
-	stop
-};
+int randoml;
+int randomr;
 class Floor {
 public:
 	GLfloat x = 0;
@@ -44,43 +37,72 @@ public:
 
 }flr;
 
+class Solidfigure {
+public:
 
-class Ball {
-	GLfloat transX;
-	GLfloat transZ;
+	void draw() {
+		glColor3f(1, 0, 0.0);
+		glPushMatrix();
+		glTranslatef(70, -100, 0);
+		if (rotateX == true) { glRotatef(angle, 1, 0, 0); }
+		else if (rotateY == true)glRotatef(angle, 0, 1, 0);
+		else if (rotateZ == true)glRotatef(angle, 0, 0, 1);
+		else if (rotateL == true)
+		{
+			if (randoml == 0)glRotatef(angle, 1, 0, 0);
+			else if (randoml == 1)glRotatef(angle, 0, 1, 0);
+			else if (randoml == 2)glRotatef(angle, 0, 0, 1);
+		}
+		if (fig == Fig::sphere) {
+			glutSolidSphere(25, 50, 50);
+		}
+		else if (fig == Fig::cube) {
+			glScalef(1.0, 2.0, 1.0);
+			glutSolidCube(50);
+		}
+		else if (fig == Fig::cone) {
+			glTranslatef(-35, 0, 0);
+			glutSolidCone(25, 50, 30, 30);
+		}
+		else if (fig == Fig::teapot) {
+			glutSolidTeapot(30);
+		}
+		glPopMatrix();
+	}
+}solid;
 
-	Dir dir = Dir::stop;
+class Wirefigure {
 public:
 	void draw() {
 		glColor3f(1, 0, 0.0);
 		glPushMatrix();
-		glTranslatef(transX, -100, transZ);
-		if (rotateX == true) { dir = Dir::x; glRotatef(angle, 1, 0, 0); }
-		else if (rotateY == true) { dir = Dir::y; glRotatef(angle, 0, 1, 0); }
-		else if (rotateZ == true) { dir = Dir::z;  glRotatef(angle, 0, 0, 1); }
-		else if (stop == true) { dir = Dir::stop; }
-		glutWireSphere(25, 30, 30);
+		glTranslatef(-70, -100, 0);
+		if (rotateX == true) { glRotatef(angle, 1, 0, 0); }
+		else if (rotateY == true)glRotatef(angle, 0, 1, 0);
+		else if (rotateZ == true)glRotatef(angle, 0, 0, 1);
+		else if (rotateR == true)
+		{
+			if (randomr == 0)glRotatef(angle, 1, 0, 0);
+			else if (randomr == 1)glRotatef(angle, 0, 1, 0);
+			else if (randomr == 2)glRotatef(angle, 0, 0, 1);
+		}
+		if (fig == Fig::sphere) {
+			glutWireSphere(25, 30, 30);
+		}
+		else if (fig == Fig::cube) {
+			glScalef(1.0, 2.0, 1.0);
+			glutWireCube(50);
+		}
+		else if (fig == Fig::cone) {
+			glTranslatef(35, 0, 0);
+			glutWireCone(25, 50, 20, 20);
+		}
+		else if (fig == Fig::teapot) {
+			glutWireTeapot(30);
+		}
 		glPopMatrix();
 	}
-
-	void roll() {
-		if (dir == Dir::x)
-		{
-			if (transZ < 150) transZ += 5;
-		}
-
-		else if (dir == Dir::z)
-		{
-			if (transX < 150) transX += 5;
-		}
-		else if (dir == Dir::stop)
-		{
-			transX = 0;
-			transZ = 0;
-		}
-
-	}
-}ball;
+}wire;
 
 void SetupRC();
 void DrawScene();
@@ -121,15 +143,22 @@ void DrawScene()
 {
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 윈도우, 깊이 버퍼 클리어 하기
-	UpdateCam();
 	glPushMatrix();
-	glTranslatef(transX, transY, transZ);
-	// 필요한 변환 적용
-	flr.draw();											// glPushMatrix 함수를 호출하여 기존의 좌표 시스템을 저장
-														// 필요한 경우 행렬 초기화 ( glLoadIdentity ( ); )
-	ball.draw();													// 변환 적용: 이동, 회전, 신축 등 모델에 적용 할 변환 함수를 호출한다.
 
+	glColor3f(1.0, 0.0, 0.0);
+	glTranslatef(50, 0, 0);
+	glRotated(45, 0, 1, 0);
+	glutWireCube(40);
 	glPopMatrix();
+	glPushMatrix();
+	//glPushMatrix();
+	glColor3f(1.0, 1.0, 0.0);
+	glRotated(45, 0, 1, 0);
+	glTranslatef(50, 0, 0);
+	
+	glutWireCube(40);
+
+	glPopMatrix();					// 변환이 끝난 후에는 원래의 좌표시스템을 다시 저장하기 위하여 glPopMatrix 함수 호출
 	glutSwapBuffers(); // 결과 출력
 }
 
@@ -152,7 +181,7 @@ void Reshape(int w, int h)
 	// 관측 변환: 카메라의 위치 설정 (필요한 경우, 다른 곳에 설정 가능)
 	gluLookAt
 	(
-		0.0, 0.5, 0.0,
+		0.0, 0.3, 0.0,
 		0.0, 0.0, 1.0,
 		0.0, 1.0, 0.0
 	);
@@ -162,81 +191,49 @@ void Reshape(int w, int h)
 // 필요한 콜백 함수 구현: 키보드 입력, 마우스 입력, 타이머 등
 void Keyboard(unsigned char key, int x, int y)
 {
-	if (key == 'l' || key == 'L') {
+	if (key == '1') fig = Fig::sphere;
+	else if (key == '2') fig = Fig::cube;
+	else if (key == '3') fig = Fig::cone;
+	else if (key == '4') fig = Fig::teapot;
+
+	if (key == 'x' || key == 'X') {
 		rotateX = true;
 		rotateY = false;
 		rotateZ = false;
-		stop = false;
 	}
-	else if (key == 'n' || key == 'N') {
+	else if (key == 'y' || key == 'Y') {
 		rotateX = false;
 		rotateY = true;
 		rotateZ = false;
-		stop = false;
+
 	}
-	else if (key == 'm' || key == 'M') {
+	else if (key == 'z' || key == 'Z') {
 		rotateX = false;
 		rotateY = false;
 		rotateZ = true;
-		stop = false;
 	}
-	else if (key == 'i' || key == 'I') {
+	else if (key == 'l' || key == 'L') {
 		rotateX = false;
 		rotateY = false;
 		rotateZ = false;
-		stop = true;
+		randoml = rand() % 3;
+		rotateL = true;
+	}
+	else if (key == 'r' || key == 'R') {
+		rotateX = false;
+		rotateY = false;
+		rotateZ = false;
 
+		rotateR = true;
+		randomr = rand() % 3;
+	}
+	srand((unsigned)time(NULL));
 
-		cyRotate = 0.1;
-		cxRotate = 0.0;
-		czRotate = 0.0;
-
-		transX = 0;
-		transY = 0;
-		transZ = 0;
-	}
-	else if (key == 'x') {
-		if (cyRotate<1) cyRotate += 0.1;
-	}
-	else if (key == 'X') {
-		if (cyRotate>-1) cyRotate -= 0.1;
-	}
-	else if (key == 'y') {
-		if (cxRotate<1) cxRotate += 0.1;
-	}
-	else if (key == 'Y') {
-		if (cxRotate>-1) cxRotate -= 0.1;
-	}
-	else if (key == 'z') {
-		czRotate += 1;
-	}
-	else if (key == 'Z') {
-		czRotate -= 1;
-	}
-	else if (key == 'a') {
-		transX += 5;
-	}
-	else if (key == 'd') {
-		transX -= 5;
-	}
-	else if (key == 'w') {
-		transY += 5;
-	}
-	else if (key == 's') {
-		transY -= 5;
-	}
-	else if (key == '+') {
-		transZ += 5;
-	}
-	else if (key == '-') {
-		transZ -= 5;
-	}
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 }
 
 void TimerFunction(int value)
 {
-	ball.roll();
 	angle -= 10;
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 	glutTimerFunc(100, TimerFunction, 1);
@@ -244,24 +241,4 @@ void TimerFunction(int value)
 
 void SpecialKeyboard(int key, int x, int y) {
 	glutPostRedisplay();
-}
-
-void UpdateCam() {
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	// 원근 투영을 사용하는 경우:
-	gluPerspective(60.0, 600 / 400, 1.0, 1000.0);
-	glTranslatef(0.0, 0.0, -300.0);
-	// glOrtho (0.0, 800.0, 0.0, 600.0, -1.0, 1.0);
-	// 모델링 변환 설정: 디스플레이 콜백 함수에서 모델 변환 적용하기 위하여 Matrix mode 저장
-
-	glRotatef(czRotate, 0, 0, 1);
-	gluLookAt
-	(
-		cxRotate, cyRotate, 0,
-		0.0, 0.0, 1.0,
-		0.0, 1.0, 0.0
-	);
-	glRotatef(-czRotate, 0, 0, 1);
-	glMatrixMode(GL_MODELVIEW);
 }

@@ -63,6 +63,29 @@ public:
 	}
 
 }flr;
+class Ball {
+public:
+	GLfloat btransX;
+	GLfloat btransZ = 100;
+	float r;
+	b_Dir dir = b_Dir::stop;
+public:
+	void draw() {
+		glColor3f(1, 0, 0.0);
+		glPushMatrix();
+		glTranslatef(btransX, -100, btransZ);
+		if (rotateX == true) { dir = b_Dir::x; glRotatef(bangle, 1, 0, 0); }
+		else if (rotateY == true) { dir = b_Dir::y; glRotatef(bangle, 0, 1, 0); }
+		else if (rotateZ == true) { dir = b_Dir::z;  glRotatef(bangle, 0, 0, 1); }
+		else if (stop == true) { dir = b_Dir::stop; }
+		glutWireSphere(25, 30, 30);
+		glPopMatrix();
+	}
+
+	void collision() {
+
+	}
+}ball;
 
 class Crain {
 public:
@@ -105,13 +128,20 @@ public:
 
 	void move()
 	{
-		if (dir == Dir::right) { transX += 10; if (transX > 150)dir = Dir::left; }
-		else if (dir == Dir::left) { transX -= 10; if (transX < -150) dir = Dir::right; }
+		if (dir == Dir::right) { ctransX += 10; if (ctransX > 150)dir = Dir::left; }
+		else if (dir == Dir::left) { ctransX -= 10; if (ctransX < -150) dir = Dir::right; }
 	}
 
-	void collision(int r)
+	void collision(Ball ball)
 	{
-
+		// 중점 사이의 거리 구하기
+		float d = sqrt(((float)(ball.btransX - ctransX)*(ball.btransX - ctransX))
+			+ (float)((ball.btransZ - 100)*(ball.btransZ - 100)));
+		if (25 >= d)
+		{
+			if (dir == Dir::right) dir = Dir::left;
+			else if (dir == Dir::left) dir = Dir::right;
+		}
 	}
 
 }crain;
@@ -311,29 +341,6 @@ public:
 
 }door;
 
-class Ball {
-public:
-	GLfloat btransX;
-	GLfloat btransZ;
-	float r;
-	b_Dir dir = b_Dir::stop;
-public:
-	void draw() {
-		glColor3f(1, 0, 0.0);
-		glPushMatrix();
-		glTranslatef(btransX, -100, btransZ);
-		if (rotateX == true) { dir = b_Dir::x; glRotatef(bangle, 1, 0, 0); }
-		else if (rotateY == true) { dir = b_Dir::y; glRotatef(bangle, 0, 1, 0); }
-		else if (rotateZ == true) { dir = b_Dir::z;  glRotatef(bangle, 0, 0, 1); }
-		else if (stop == true) { dir = b_Dir::stop; }
-		glutWireSphere(25, 30, 30);
-		glPopMatrix();
-	}
-
-	void collision() {
-		
-	}
-}ball;
 
 
 void SetupRC();
@@ -377,7 +384,7 @@ void DrawScene()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 윈도우, 깊이 버퍼 클리어 하기
 	UpdateCam();
 	glPushMatrix();
-	glTranslatef(transX, transY, transZ);
+	//glTranslatef(transX, transY, transZ);
 	// 필요한 변환 적용
 	flr.draw();											// glPushMatrix 함수를 호출하여 기존의 좌표 시스템을 저장
 	r_tree.draw();
@@ -535,12 +542,12 @@ void TimerFunction(int value)
 {
 	
 	crain.move();
+	crain.collision(ball);
 	cone.move();
 	door.open();
 	r_tree.move();
 	s_tree.move();
 	torus.move();
-	
 	angle -= 10;
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 	glutTimerFunc(100, TimerFunction, 1);
