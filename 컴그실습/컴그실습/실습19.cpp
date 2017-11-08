@@ -23,6 +23,7 @@ float transX = 0.0;
 float transY = 0.0;
 float transZ = 0.0;
 int random;
+
 enum class Dir {
 	right,
 	left
