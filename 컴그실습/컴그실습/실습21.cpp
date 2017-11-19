@@ -540,7 +540,6 @@ void Keyboard(unsigned char key, int x, int y)
 
 void TimerFunction(int value)
 {
-	
 	crain.move();
 	crain.collision(ball);
 	cone.move();

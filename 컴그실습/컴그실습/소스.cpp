@@ -1,244 +1,582 @@
-#include <glut.h> 
-#include <iostream>
+ï»¿
+#include <glut.h> // includes gl.h glu.h
+
+#include <stdio.h>
+
 #include <stdlib.h>
-#include <ctime>
-#define PI 3.141592
 
-enum class Fig {
-	sphere	// ±¸ 
-	, cube	//Á÷À°¸éÃ¼
-	, cone	// ¿ø»Ô
-	, teapot // ÁÖÀüÀÚ
-}fig;
-float angle = 0.0;
-bool rotateX = false;
-bool rotateY = false;
-bool rotateZ = false;
-bool rotateL = false;
-bool rotateR = false;
-bool rotate = false;
-int randoml;
-int randomr;
-class Floor {
-public:
-	GLfloat x = 0;
-	GLfloat y = 0;
-	GLfloat z = 0;
-	GLfloat size = 100.0;
+#include <time.h>
 
-	void draw() {
-		glColor3f(1, 0.8, 0.0);
-		glPushMatrix();
-		glTranslatef(0, -100, 0);
-		glScalef(1.0, 0.1, 1.0);
-		glutSolidCube(300);
-		glPopMatrix();
-	}
 
-}flr;
 
-class Solidfigure {
-public:
+GLvoid drawScene(GLvoid);
 
-	void draw() {
-		glColor3f(1, 0, 0.0);
-		glPushMatrix();
-		glTranslatef(70, -100, 0);
-		if (rotateX == true) { glRotatef(angle, 1, 0, 0); }
-		else if (rotateY == true)glRotatef(angle, 0, 1, 0);
-		else if (rotateZ == true)glRotatef(angle, 0, 0, 1);
-		else if (rotateL == true)
-		{
-			if (randoml == 0)glRotatef(angle, 1, 0, 0);
-			else if (randoml == 1)glRotatef(angle, 0, 1, 0);
-			else if (randoml == 2)glRotatef(angle, 0, 0, 1);
-		}
-		if (fig == Fig::sphere) {
-			glutSolidSphere(25, 50, 50);
-		}
-		else if (fig == Fig::cube) {
-			glScalef(1.0, 2.0, 1.0);
-			glutSolidCube(50);
-		}
-		else if (fig == Fig::cone) {
-			glTranslatef(-35, 0, 0);
-			glutSolidCone(25, 50, 30, 30);
-		}
-		else if (fig == Fig::teapot) {
-			glutSolidTeapot(30);
-		}
-		glPopMatrix();
-	}
-}solid;
+GLvoid Reshape(int w, int h);
 
-class Wirefigure {
-public:
-	void draw() {
-		glColor3f(1, 0, 0.0);
-		glPushMatrix();
-		glTranslatef(-70, -100, 0);
-		if (rotateX == true) { glRotatef(angle, 1, 0, 0); }
-		else if (rotateY == true)glRotatef(angle, 0, 1, 0);
-		else if (rotateZ == true)glRotatef(angle, 0, 0, 1);
-		else if (rotateR == true)
-		{
-			if (randomr == 0)glRotatef(angle, 1, 0, 0);
-			else if (randomr == 1)glRotatef(angle, 0, 1, 0);
-			else if (randomr == 2)glRotatef(angle, 0, 0, 1);
-		}
-		if (fig == Fig::sphere) {
-			glutWireSphere(25, 30, 30);
-		}
-		else if (fig == Fig::cube) {
-			glScalef(1.0, 2.0, 1.0);
-			glutWireCube(50);
-		}
-		else if (fig == Fig::cone) {
-			glTranslatef(35, 0, 0);
-			glutWireCone(25, 50, 20, 20);
-		}
-		else if (fig == Fig::teapot) {
-			glutWireTeapot(30);
-		}
-		glPopMatrix();
-	}
-}wire;
+void Mouse(int, int, int, int);
 
-void SetupRC();
-void DrawScene();
-void Reshape(int w, int h);
-void Keyboard(unsigned char key, int x, int y);
-void TimerFunction(int value);
-void SpecialKeyboard(int key, int x, int y);
+void Keyboard(unsigned char, int, int);
 
-void main()
-{
-	// À©µµ¿ì ÃÊ±âÈ­ ¹× »ı¼º
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 800);
-	glutInitWindowPosition(500, 100);
-	glutCreateWindow("Points Drawing");
+void SpecialKey(int key, int x, int y);
 
-	// »óÅÂ º¯¼ö ÃÊ±âÈ­ ÇÔ¼ö
-	SetupRC();
+void TimerFunction(int);
 
-	// ÇÊ¿äÇÑ Äİ¹é ÇÔ¼ö ¼³Á¤
-	glutDisplayFunc(DrawScene); // Ãâ·Â Äİ¹é ÇÔ¼ö
-	glutReshapeFunc(Reshape); // ´Ù½Ã ±×¸®±â Äİ¹é ÇÔ¼ö
-	glutKeyboardFunc(Keyboard); // Å°º¸µå ÀÔ·Â Äİ¹é ÇÔ¼ö
-	glutSpecialFunc(SpecialKeyboard);
-	glutTimerFunc(100, TimerFunction, 1); // Å¸ÀÌ¸Ó Äİ¹é ÇÔ¼ö
-	glutMainLoop(); // ÀÌº¥Æ® ·çÇÁ ½ÇÇàÇÏ±â
+void vMenuFunc(int value);
+
+
+
+
+
+float fBingle = 0.0;
+
+float fBingle2 = 0.0;
+
+int iMmenu, imode;
+
+
+
+int  iDepth, iCulling, iShading, iTop, iBottom;
+
+
+
+bool bTop = true;
+
+bool bBottom = true;
+
+bool bDepth = false;
+
+bool bCulling = false;
+
+bool bShading = false;
+
+
+
+void vLine();
+
+
+
+void main(int argc, char *argv[]) {
+
+	//ì´ˆê¸°í™” í•¨ìˆ˜ë“¤
+
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);// ë””ìŠ¤í”Œë ˆì´ ëª¨ë“œ ì„¤ì •
+
+	glutInitWindowPosition(100, 100); // ìœˆë„ìš°ì˜ ìœ„ì¹˜ì§€ì •
+
+	glutInitWindowSize(800, 600); // ìœˆë„ìš°ì˜ í¬ê¸° ì§€ì •
+
+	glutCreateWindow("WindowsHyun - 2012180004"); // ìœˆë„ìš° ìƒì„± (ìœˆë„ìš° ì´ë¦„)
+
+	glutDisplayFunc(drawScene); // ì¶œë ¥ í•¨ìˆ˜ì˜ ì§€ì •
+
+	glutMouseFunc(Mouse);
+
+
+
+	iDepth = glutCreateMenu(vMenuFunc);
+
+	glutAddMenuEntry("On", 1);
+
+	glutAddMenuEntry("Off", 2);
+
+	iCulling = glutCreateMenu(vMenuFunc);
+
+	glutAddMenuEntry("On", 3);
+
+	glutAddMenuEntry("Off", 4);
+
+	iShading = glutCreateMenu(vMenuFunc);
+
+	glutAddMenuEntry("On", 5);
+
+	glutAddMenuEntry("Off", 6);
+
+	iTop = glutCreateMenu(vMenuFunc);
+
+	glutAddMenuEntry("On", 7);
+
+	glutAddMenuEntry("Off", 8);
+
+	iBottom = glutCreateMenu(vMenuFunc);
+
+	glutAddMenuEntry("On", 9);
+
+	glutAddMenuEntry("Off", 10);
+
+
+
+	iMmenu = glutCreateMenu(vMenuFunc);
+
+	glutAddSubMenu("ì€ë©´ì œê±°", iDepth);
+
+	glutAddSubMenu("ì»¬ë§", iCulling);
+
+	glutAddSubMenu("ì‰ì´ë”©", iShading);
+
+	glutAddSubMenu("ìœ—ë©´", iTop);
+
+	glutAddSubMenu("ì˜†ë©´", iBottom);
+
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+
+
+	glutTimerFunc(50, TimerFunction, 1);
+
+	glutKeyboardFunc(Keyboard);
+
+	glutSpecialFunc(SpecialKey);
+
+	glutReshapeFunc(Reshape);
+
+
+
+	glutMainLoop();
+
 }
 
-// ÃÊ±âÈ­ ÇÔ¼ö (Optional): ÇÊ¿äÇÑ °æ¿ì¿¡ ÀÛ¼º, ÃÊ±âÈ­ÇØ¾ß ÇÒ º¯¼öµéÀÌ ¸¹À» ¶§´Â ¸¸µå´Â °ÍÀÌ À¯¸®
-void SetupRC() {
-	// ÇÊ¿äÇÑ º¯¼öµé, ÁÂÇ¥°ª µîÀÇ ÃÊ±âÈ­
-	// ±â´É ¼³Á¤ ÃÊ±âÈ­
+
+
+// ìœˆë„ìš° ì¶œë ¥ í•¨ìˆ˜
+
+GLvoid drawScene(GLvoid) {
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // ë°”íƒ•ìƒ‰ì„ 'Black' ë¡œ ì§€ì •
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glPushMatrix(); //Save
+	glRotatef(30, 1.0, 0.0, 0.0);
+	glRotatef(45, 0.0, 1.0, 0.0);
+	glPushMatrix(); //Save
+	vLine();
+	glPopMatrix();
+	glPushMatrix(); //Save
+	glRotated(fBingle, 0, 1.0, 0);
+	glRotated(fBingle2, 1.0, 0, 0);
+
+	if (bDepth == false) {
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	else {
+		glDisable(GL_DEPTH_TEST);
+	}
+
+
+
+	if (bCulling == true) {
+
+		glEnable(GL_CULL_FACE);
+
+	}
+
+	else {
+		glDisable(GL_CULL_FACE);
+	}
+
+	if (bShading == true) {
+		glShadeModel(GL_SMOOTH); // ë˜ëŠ” glShadeModel (GL_FLAT)
+	}
+
+	if (bBottom == true) {
+
+		glBegin(GL_QUADS);
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		glVertex3f(-100.0, 100.0, 100.0);   //1
+
+		glColor3f(0.0f, 1.0f, 1.0f);
+
+		glVertex3f(-100.0, -100.0, 100.0);   //2
+
+		glColor3f(0.0f, 1.0f, 0.0f);
+
+		glVertex3f(100.0, -100.0, 100.0);   //3
+
+		glColor3f(1.0f, 1.0f, 0.0f);
+
+		glVertex3f(100.0, 100.0, 100.0);   //4
+
+		glEnd();
+
+	}
+
+
+
+	glBegin(GL_QUADS);
+
+	glColor3f(1.0f, 1.0f, 0.0f);
+
+	glVertex3f(100.0, 100.0, 100.0);   //4
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(100.0, -100.0, 100.0);   //3   
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+
+	glVertex3f(100.0, -100.0, -100.0);   //7
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+
+	glVertex3f(100.0, 100.0, -100.0);   //6
+
+	glEnd();
+
+
+
+	glBegin(GL_QUADS);
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+
+	glVertex3f(-100.0, 100.0, -100.0);   //5
+
+	glColor3f(1.0f, 0.0f, 1.0f);
+
+	glVertex3f(100.0, 100.0, -100.0);   //6
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+
+	glVertex3f(100.0, -100.0, -100.0);   //7
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+
+	glVertex3f(-100.0, -100.0, -100.0);   //8
+
+	glEnd();
+
+
+
+	glBegin(GL_QUADS);
+
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glVertex3f(-100.0, 100.0, 100.0);   //1
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+
+	glVertex3f(-100.0, 100.0, -100.0);   //5
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+
+	glVertex3f(-100.0, -100.0, -100.0);   //8   
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+
+	glVertex3f(-100.0, -100.0, 100.0);   //2
+
+	glEnd();
+
+
+
+	glBegin(GL_QUADS);
+
+	glColor3f(0.0f, 1.0f, 1.0f);
+
+	glVertex3f(-100.0, -100.0, 100.0);   //2
+
+	glColor3f(0.0f, 0.0f, 0.0f);
+
+	glVertex3f(-100.0, -100.0, -100.0);   //8
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+
+	glVertex3f(100.0, -100.0, -100.0);   //7
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+
+	glVertex3f(100.0, -100.0, 100.0);   //3
+
+	glEnd();
+
+
+
+	if (bTop == true) {
+
+		glBegin(GL_QUADS);
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		glVertex3f(-100.0, 100.0, 100.0);  //1
+
+		glColor3f(1.0f, 1.0f, 0.0f);
+
+		glVertex3f(100.0, 100.0, 100.0);   //4
+
+		glColor3f(1.0f, 0.0f, 1.0f);
+
+		glVertex3f(100.0, 100.0, -100.0);   //6
+
+		glColor3f(1.0f, 0.0f, 0.0f);
+
+		glVertex3f(-100.0, 100.0, -100.0);   //5
+
+		glEnd();
+
+	}
+
+
+
+	glPopMatrix();
+
+
+
+	glPopMatrix();
+
+	//glFlush(); // í™”ë©´ì— ì¶œë ¥í•˜ê¸°
+
+	glutSwapBuffers();	// í™”ë©´ì— ì¶œë ¥í•˜ê¸°
+
 }
 
-//-------------------------------------------------------------------------------------------------------------------------
-// ·»´õ¸µÀ» À§ÇÑ µğ½ºÇÃ·¹ÀÌ Äİ¹é ÇÔ¼ö: ¸ğµç ±×¸®±â ¸í·ÉÀº ÀÌ ÇÔ¼ö¿¡¼­ ´ëºÎºĞ Ã³¸® ÇÔ
-void DrawScene()
-{
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // À©µµ¿ì, ±íÀÌ ¹öÆÛ Å¬¸®¾î ÇÏ±â
-	glPushMatrix();
+
+
+void TimerFunction(int value) {
+
+	glutPostRedisplay(); // í™”ë©´ ì¬ ì¶œë ¥
+
+	fBingle -= 1.0;
+
+
+
+	glutTimerFunc(50, TimerFunction, 1); // íƒ€ì´ë¨¸í•¨ìˆ˜ ì¬ ì„¤ì •
+
+}
+
+
+
+void Keyboard(unsigned char key, int x, int y) {
+
+	printf("InPut Key = %c\n", key);
+
+
+
+	if (key == 'c') {
+
+		fBingle += 1.0;
+
+	}
+
+	if (key == 'v') {
+
+		fBingle -= 1.0;
+
+	}
+
+
+
+	if (key == 'd') {
+
+		fBingle2 += 1.0;
+
+	}
+
+	if (key == 'f') {
+
+		fBingle2 -= 1.0;
+
+	}
+
+
+
+	glutPostRedisplay();
+
+}
+
+
+
+void SpecialKey(int key, int x, int y) {
+
+	if (key == GLUT_KEY_LEFT) {
+
+
+
+	}
+
+	if (key == GLUT_KEY_RIGHT) {
+
+
+
+	}
+
+	if (key == GLUT_KEY_DOWN) {
+
+
+
+	}
+
+	if (key == GLUT_KEY_UP) {
+
+
+
+	}
+
+	glutPostRedisplay();
+
+}
+
+
+
+void Mouse(int button, int state, int x, int y) {
+
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+
+		printf("Left = (%d, %d)\n", x, y);
+
+	}
+
+	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+
+		printf("Right = (%d, %d)\n", x, y);
+
+	}
+
+}
+
+
+
+GLvoid Reshape(int w, int h) {
+
+	glViewport(0, 0, w, h);
+
+	glMatrixMode(GL_PROJECTION);
+
+	glLoadIdentity();
+
+
+
+	gluPerspective(60.0f, w / h, 1.0, 1500.0);
+
+
+
+	gluLookAt(0, 0, 500, 0, 0, -1, 0, 1, 0);
+
+
+
+	glMatrixMode(GL_MODELVIEW);
+
+}
+
+
+
+void vLine() {
+
+	glLineWidth(2.0);
+
+	glBegin(GL_LINES);
 
 	glColor3f(1.0, 0.0, 0.0);
-	glTranslatef(50, 0, 0);
-	glRotated(45, 0, 1, 0);
-	glutWireCube(40);
-	glPopMatrix();
-	glPushMatrix();
-	//glPushMatrix();
-	glColor3f(1.0, 1.0, 0.0);
-	glRotated(45, 0, 1, 0);
-	glTranslatef(50, 0, 0);
-	
-	glutWireCube(40);
 
-	glPopMatrix();					// º¯È¯ÀÌ ³¡³­ ÈÄ¿¡´Â ¿ø·¡ÀÇ ÁÂÇ¥½Ã½ºÅÛÀ» ´Ù½Ã ÀúÀåÇÏ±â À§ÇÏ¿© glPopMatrix ÇÔ¼ö È£Ãâ
-	glutSwapBuffers(); // °á°ú Ãâ·Â
+	glVertex3f(-100, 0, 0);
+
+	glVertex3f(100, 0, 0);
+
+	glEnd();
+
+
+
+	glBegin(GL_LINES);
+
+	glColor3f(0.0, 1.0, 0.0);
+
+	glVertex3f(0, -100, 0);
+
+	glVertex3f(0, 100, 0);
+
+	glEnd();
+
+
+
+	glBegin(GL_LINES);
+
+	glColor3f(0.0, 0.0, 1.0);
+
+	glVertex3f(0, 0, -100);
+
+	glVertex3f(0, 0, 100);
+
+	glEnd();
+
 }
 
-// ´Ù½Ã±×¸®±â Äİ¹é ÇÔ¼ö
-// Ã³À½ À©µµ¿ì¸¦ ¿­ ¶§, À©µµ¿ì À§Ä¡¸¦ ¿Å±â°Å³ª Å©±â¸¦ Á¶ÀıÇÒ ¶§ È£Ãâ
-// ºäÆ÷Æ® ¼³Á¤, Åõ¿µ ÁÂÇ¥°è ¼³Á¤, °üÃø ÁÂÇ¥ ¼³Á¤ µîÀ» ÇÑ´Ù.
-void Reshape(int w, int h)
-{
-	// ºäÆ÷Æ® º¯È¯ ¼³Á¤: Ãâ·Â È­¸é °áÁ¤
-	glViewport(0, 0, w, h);
-	// Å¬¸®ÇÎ º¯È¯ ¼³Á¤: Ãâ·ÂÇÏ°íÀÚ ÇÏ´Â °ø°£ °áÁ¤
-	// ¾Æ·¡ 3ÁÙÀº Åõ¿µÀ» ¼³Á¤ÇÏ´Â ÇÔ¼ö
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	// ¿ø±Ù Åõ¿µÀ» »ç¿ëÇÏ´Â °æ¿ì:
-	gluPerspective(60.0, 600 / 400, 1.0, 1000.0);
-	glTranslatef(0.0, 0.0, -300.0);
-	// glOrtho (0.0, 800.0, 0.0, 600.0, -1.0, 1.0);
-	// ¸ğµ¨¸µ º¯È¯ ¼³Á¤: µğ½ºÇÃ·¹ÀÌ Äİ¹é ÇÔ¼ö¿¡¼­ ¸ğµ¨ º¯È¯ Àû¿ëÇÏ±â À§ÇÏ¿© Matrix mode ÀúÀå
-	// °üÃø º¯È¯: Ä«¸Ş¶óÀÇ À§Ä¡ ¼³Á¤ (ÇÊ¿äÇÑ °æ¿ì, ´Ù¸¥ °÷¿¡ ¼³Á¤ °¡´É)
-	gluLookAt
-	(
-		0.0, 0.3, 0.0,
-		0.0, 0.0, 1.0,
-		0.0, 1.0, 0.0
-	);
-	glMatrixMode(GL_MODELVIEW);
-}
 
-// ÇÊ¿äÇÑ Äİ¹é ÇÔ¼ö ±¸Çö: Å°º¸µå ÀÔ·Â, ¸¶¿ì½º ÀÔ·Â, Å¸ÀÌ¸Ó µî
-void Keyboard(unsigned char key, int x, int y)
-{
-	if (key == '1') fig = Fig::sphere;
-	else if (key == '2') fig = Fig::cube;
-	else if (key == '3') fig = Fig::cone;
-	else if (key == '4') fig = Fig::teapot;
 
-	if (key == 'x' || key == 'X') {
-		rotateX = true;
-		rotateY = false;
-		rotateZ = false;
+void vMenuFunc(int iBt) {
+
+	switch (iBt) {
+
+	default:
+
+	case 1:
+
+		bDepth = true;
+
+		break;
+
+	case 2:
+
+		bDepth = false;
+
+		break;
+
+
+
+	case 3:
+
+		bCulling = true;
+
+		break;
+
+	case 4:
+
+		bCulling = false;
+
+		break;
+
+
+
+	case 5:
+
+		bShading = true;
+
+		break;
+
+	case 6:
+
+		bShading = false;
+
+		break;
+
+
+
+	case 7:
+
+		bTop = true;
+
+		break;
+
+	case 8:
+
+		bTop = false;
+
+		break;
+
+	case 9:
+
+		bBottom = true;
+
+		break;
+
+	case 10:
+
+		bBottom = false;
+
+		break;
+
 	}
-	else if (key == 'y' || key == 'Y') {
-		rotateX = false;
-		rotateY = true;
-		rotateZ = false;
 
-	}
-	else if (key == 'z' || key == 'Z') {
-		rotateX = false;
-		rotateY = false;
-		rotateZ = true;
-	}
-	else if (key == 'l' || key == 'L') {
-		rotateX = false;
-		rotateY = false;
-		rotateZ = false;
-		randoml = rand() % 3;
-		rotateL = true;
-	}
-	else if (key == 'r' || key == 'R') {
-		rotateX = false;
-		rotateY = false;
-		rotateZ = false;
-
-		rotateR = true;
-		randomr = rand() % 3;
-	}
-	srand((unsigned)time(NULL));
-
-	glutPostRedisplay(); // È­¸é ÀçÃâ·ÂÀ» À§ÇÏ¿© µğ½ºÇÃ·¹ÀÌ Äİ¹é ÇÔ¼ö È£Ãâ
-}
-
-void TimerFunction(int value)
-{
-	angle -= 10;
-	glutPostRedisplay(); // È­¸é ÀçÃâ·ÂÀ» À§ÇÏ¿© µğ½ºÇÃ·¹ÀÌ Äİ¹é ÇÔ¼ö È£Ãâ
-	glutTimerFunc(100, TimerFunction, 1);
-}
-
-void SpecialKeyboard(int key, int x, int y) {
 	glutPostRedisplay();
+
 }
