@@ -1,582 +1,149 @@
-﻿
-#include <glut.h> // includes gl.h glu.h
+﻿#include <glut.h> 
+#include <iostream>
+#define PI 3.141592
 
-#include <stdio.h>
+void SetupRC();
+void DrawScene();
+void Reshape(int w, int h);
+void Keyboard(unsigned char key, int x, int y);
+void TimerFunction(int value);
+void SpecialKeyboard(int key, int x, int y);
+void Mouse(int button, int state, int x, int y);
+int num = 0;
+int depth = 1;
+GLdouble cyRotate = 0.5;
+GLdouble cxRotate = 0.0;
+GLdouble czRotate = 0.0;
 
-#include <stdlib.h>
-
-#include <time.h>
-
-
-
-GLvoid drawScene(GLvoid);
-
-GLvoid Reshape(int w, int h);
-
-void Mouse(int, int, int, int);
-
-void Keyboard(unsigned char, int, int);
-
-void SpecialKey(int key, int x, int y);
-
-void TimerFunction(int);
-
-void vMenuFunc(int value);
-
-
-
-
-
-float fBingle = 0.0;
-
-float fBingle2 = 0.0;
-
-int iMmenu, imode;
-
-
-
-int  iDepth, iCulling, iShading, iTop, iBottom;
-
-
-
-bool bTop = true;
-
-bool bBottom = true;
-
-bool bDepth = false;
-
-bool bCulling = false;
-
-bool bShading = false;
-
-
-
-void vLine();
-
-
-
-void main(int argc, char *argv[]) {
-
-	//초기화 함수들
-
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);// 디스플레이 모드 설정
-
-	glutInitWindowPosition(100, 100); // 윈도우의 위치지정
-
-	glutInitWindowSize(800, 600); // 윈도우의 크기 지정
-
-	glutCreateWindow("WindowsHyun - 2012180004"); // 윈도우 생성 (윈도우 이름)
-
-	glutDisplayFunc(drawScene); // 출력 함수의 지정
-
+GLfloat ctrlpoints[20][3] = { { 0,0,0 } };
+void main()
+{
+	// 윈도우 초기화 및 생성
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(800, 600);
+	glutInitWindowPosition(500, 100);
+	glutCreateWindow("Points Drawing");
 	glutMouseFunc(Mouse);
+	// 상태 변수 초기화 함수
+	SetupRC();
 
+	// 필요한 콜백 함수 설정
+	glutDisplayFunc(DrawScene); // 출력 콜백 함수
+	glutReshapeFunc(Reshape); // 다시 그리기 콜백 함수
+	glutKeyboardFunc(Keyboard); // 키보드 입력 콜백 함수
+	glutSpecialFunc(SpecialKeyboard);
+	glutTimerFunc(100, TimerFunction, 1); // 타이머 콜백 함수
+	glutMainLoop(); // 이벤트 루프 실행하기
+}
 
-
-	iDepth = glutCreateMenu(vMenuFunc);
-
-	glutAddMenuEntry("On", 1);
-
-	glutAddMenuEntry("Off", 2);
-
-	iCulling = glutCreateMenu(vMenuFunc);
-
-	glutAddMenuEntry("On", 3);
-
-	glutAddMenuEntry("Off", 4);
-
-	iShading = glutCreateMenu(vMenuFunc);
-
-	glutAddMenuEntry("On", 5);
-
-	glutAddMenuEntry("Off", 6);
-
-	iTop = glutCreateMenu(vMenuFunc);
-
-	glutAddMenuEntry("On", 7);
-
-	glutAddMenuEntry("Off", 8);
-
-	iBottom = glutCreateMenu(vMenuFunc);
-
-	glutAddMenuEntry("On", 9);
-
-	glutAddMenuEntry("Off", 10);
-
-
-
-	iMmenu = glutCreateMenu(vMenuFunc);
-
-	glutAddSubMenu("은면제거", iDepth);
-
-	glutAddSubMenu("컬링", iCulling);
-
-	glutAddSubMenu("쉐이딩", iShading);
-
-	glutAddSubMenu("윗면", iTop);
-
-	glutAddSubMenu("옆면", iBottom);
-
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
-
-
-
-	glutTimerFunc(50, TimerFunction, 1);
-
-	glutKeyboardFunc(Keyboard);
-
-	glutSpecialFunc(SpecialKey);
-
-	glutReshapeFunc(Reshape);
-
-
-
-	glutMainLoop();
+void SetupRC() {
 
 }
 
-
-
-// 윈도우 출력 함수
-
-GLvoid drawScene(GLvoid) {
-
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 바탕색을 'Black' 로 지정
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glPushMatrix(); //Save
-	glRotatef(30, 1.0, 0.0, 0.0);
-	glRotatef(45, 0.0, 1.0, 0.0);
-	glPushMatrix(); //Save
-	vLine();
-	glPopMatrix();
-	glPushMatrix(); //Save
-	glRotated(fBingle, 0, 1.0, 0);
-	glRotated(fBingle2, 1.0, 0, 0);
-
-	if (bDepth == false) {
-		glEnable(GL_DEPTH_TEST);
-	}
-
-	else {
-		glDisable(GL_DEPTH_TEST);
-	}
-
-
-
-	if (bCulling == true) {
-
-		glEnable(GL_CULL_FACE);
-
-	}
-
-	else {
-		glDisable(GL_CULL_FACE);
-	}
-
-	if (bShading == true) {
-		glShadeModel(GL_SMOOTH); // 또는 glShadeModel (GL_FLAT)
-	}
-
-	if (bBottom == true) {
-
-		glBegin(GL_QUADS);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-
-		glVertex3f(-100.0, 100.0, 100.0);   //1
-
-		glColor3f(0.0f, 1.0f, 1.0f);
-
-		glVertex3f(-100.0, -100.0, 100.0);   //2
-
-		glColor3f(0.0f, 1.0f, 0.0f);
-
-		glVertex3f(100.0, -100.0, 100.0);   //3
-
-		glColor3f(1.0f, 1.0f, 0.0f);
-
-		glVertex3f(100.0, 100.0, 100.0);   //4
-
-		glEnd();
-
-	}
-
-
-
-	glBegin(GL_QUADS);
-
-	glColor3f(1.0f, 1.0f, 0.0f);
-
-	glVertex3f(100.0, 100.0, 100.0);   //4
-
-	glColor3f(0.0f, 1.0f, 0.0f);
-
-	glVertex3f(100.0, -100.0, 100.0);   //3   
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-
-	glVertex3f(100.0, -100.0, -100.0);   //7
-
-	glColor3f(1.0f, 0.0f, 1.0f);
-
-	glVertex3f(100.0, 100.0, -100.0);   //6
-
+//-------------------------------------------------------------------------------------------------------------------------
+// 렌더링을 위한 디스플레이 콜백 함수: 모든 그리기 명령은 이 함수에서 대부분 처리 함
+void DrawScene()
+{
+	// 3차원 상의 제어점 설정
+	GLfloat ctrlpoints[3][3][3] = { { { -4.0, 0.0, 4.0 },{ -2.0, 4.0, 4.0 },{ 4.0, 0.0, 4.0 } },
+	{ { -4.0, 0.0, 0.0 },{ -2.0, 4.0, 0.0 },{ 4.0, 0.0, 0.0 } },
+	{ { -4.0, 0.0, -4.0 },{ -2.0, 4.0, -4.0 },{ 4.0, 0.0, -4.0 } } };
+	// 곡면 제어점 설정
+	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &ctrlpoints[0][0][0]);
+	glEnable(GL_MAP2_VERTEX_3);
+	// 그리드를 이용한 곡면 드로잉
+	glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
+	// 선을 이용하여 그리드 연결
+	glEvalMesh2(GL_LINE, 0, 10, 0, 10);
+	glPointSize(2.0); glColor3f(0.0, 0.0, 1.0);
+	glBegin(GL_POINTS);
+	for (int i = 0; i < 3; i++)
+		for (int j = 0; j < 3; j++)
+			glVertex3fv(ctrlpoints[i][j]);
 	glEnd();
 
-
-
-	glBegin(GL_QUADS);
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-
-	glVertex3f(-100.0, 100.0, -100.0);   //5
-
-	glColor3f(1.0f, 0.0f, 1.0f);
-
-	glVertex3f(100.0, 100.0, -100.0);   //6
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-
-	glVertex3f(100.0, -100.0, -100.0);   //7
-
-	glColor3f(0.0f, 0.0f, 0.0f);
-
-	glVertex3f(-100.0, -100.0, -100.0);   //8
-
-	glEnd();
-
-
-
-	glBegin(GL_QUADS);
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	glVertex3f(-100.0, 100.0, 100.0);   //1
-
-	glColor3f(1.0f, 0.0f, 0.0f);
-
-	glVertex3f(-100.0, 100.0, -100.0);   //5
-
-	glColor3f(0.0f, 0.0f, 0.0f);
-
-	glVertex3f(-100.0, -100.0, -100.0);   //8   
-
-	glColor3f(0.0f, 1.0f, 1.0f);
-
-	glVertex3f(-100.0, -100.0, 100.0);   //2
-
-	glEnd();
-
-
-
-	glBegin(GL_QUADS);
-
-	glColor3f(0.0f, 1.0f, 1.0f);
-
-	glVertex3f(-100.0, -100.0, 100.0);   //2
-
-	glColor3f(0.0f, 0.0f, 0.0f);
-
-	glVertex3f(-100.0, -100.0, -100.0);   //8
-
-	glColor3f(0.0f, 0.0f, 1.0f);
-
-	glVertex3f(100.0, -100.0, -100.0);   //7
-
-	glColor3f(0.0f, 1.0f, 0.0f);
-
-	glVertex3f(100.0, -100.0, 100.0);   //3
-
-	glEnd();
-
-
-
-	if (bTop == true) {
-
-		glBegin(GL_QUADS);
-
-		glColor3f(1.0f, 1.0f, 1.0f);
-
-		glVertex3f(-100.0, 100.0, 100.0);  //1
-
-		glColor3f(1.0f, 1.0f, 0.0f);
-
-		glVertex3f(100.0, 100.0, 100.0);   //4
-
-		glColor3f(1.0f, 0.0f, 1.0f);
-
-		glVertex3f(100.0, 100.0, -100.0);   //6
-
-		glColor3f(1.0f, 0.0f, 0.0f);
-
-		glVertex3f(-100.0, 100.0, -100.0);   //5
-
-		glEnd();
-
-	}
-
-
-
-	glPopMatrix();
-
-
-
-	glPopMatrix();
-
-	//glFlush(); // 화면에 출력하기
-
-	glutSwapBuffers();	// 화면에 출력하기
-
+	glutSwapBuffers(); // 결과 출력
 }
 
-
-
-void TimerFunction(int value) {
-
-	glutPostRedisplay(); // 화면 재 출력
-
-	fBingle -= 1.0;
-
-
-
-	glutTimerFunc(50, TimerFunction, 1); // 타이머함수 재 설정
-
-}
-
-
-
-void Keyboard(unsigned char key, int x, int y) {
-
-	printf("InPut Key = %c\n", key);
-
-
-
-	if (key == 'c') {
-
-		fBingle += 1.0;
-
-	}
-
-	if (key == 'v') {
-
-		fBingle -= 1.0;
-
-	}
-
-
-
-	if (key == 'd') {
-
-		fBingle2 += 1.0;
-
-	}
-
-	if (key == 'f') {
-
-		fBingle2 -= 1.0;
-
-	}
-
-
-
-	glutPostRedisplay();
-
-}
-
-
-
-void SpecialKey(int key, int x, int y) {
-
-	if (key == GLUT_KEY_LEFT) {
-
-
-
-	}
-
-	if (key == GLUT_KEY_RIGHT) {
-
-
-
-	}
-
-	if (key == GLUT_KEY_DOWN) {
-
-
-
-	}
-
-	if (key == GLUT_KEY_UP) {
-
-
-
-	}
-
-	glutPostRedisplay();
-
-}
-
-
-
-void Mouse(int button, int state, int x, int y) {
-
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-
-		printf("Left = (%d, %d)\n", x, y);
-
-	}
-
-	else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
-
-		printf("Right = (%d, %d)\n", x, y);
-
-	}
-
-}
-
-
-
-GLvoid Reshape(int w, int h) {
-
-	glViewport(0, 0, w, h);
-
-	glMatrixMode(GL_PROJECTION);
-
-	glLoadIdentity();
-
-
-
-	gluPerspective(60.0f, w / h, 1.0, 1500.0);
-
-
-
-	gluLookAt(0, 0, 500, 0, 0, -1, 0, 1, 0);
-
-
-
+void Reshape(int w, int h)
+{
+	// 뷰포트 변환 설정: 출력 화면 결정
+	//glViewport(0, 0, w, h);
+	// 클리핑 변환 설정: 출력하고자 하는 공간 결정
+	// 아래 3줄은 투영을 설정하는 함수
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	// 원근 투영을 사용하는 경우:
+	//gluPerspective(60.0, 600 / 400, 1.0, 1000.0);
+	//glTranslatef(0.0, 0.0, 0.0);
+	glOrtho(0.0, 800.0, 600.0, 0.0, -1.0, 1.0);
+	// 모델링 변환 설정: 디스플레이 콜백 함수에서 모델 변환 적용하기 위하여 Matrix mode 저장
+
+
+	//gluLookAt
+	//(
+	//	0.0, 0.5, 0.0,
+	//	0.0, 0.0, 1.0,
+	//	0.0, 1.0, 0.0
+	//);
 	glMatrixMode(GL_MODELVIEW);
 
 }
 
 
-
-void vLine() {
-
-	glLineWidth(2.0);
-
-	glBegin(GL_LINES);
-
-	glColor3f(1.0, 0.0, 0.0);
-
-	glVertex3f(-100, 0, 0);
-
-	glVertex3f(100, 0, 0);
-
-	glEnd();
-
-
-
-	glBegin(GL_LINES);
-
-	glColor3f(0.0, 1.0, 0.0);
-
-	glVertex3f(0, -100, 0);
-
-	glVertex3f(0, 100, 0);
-
-	glEnd();
-
-
-
-	glBegin(GL_LINES);
-
-	glColor3f(0.0, 0.0, 1.0);
-
-	glVertex3f(0, 0, -100);
-
-	glVertex3f(0, 0, 100);
-
-	glEnd();
-
+void Keyboard(unsigned char key, int x, int y)
+{
+	if (key == 'd' || key == 'D') {
+		if (depth == 0)depth = 1;
+		else if (depth == 1)depth = 0;
+	}
+	else if (key == 'r' || key == 'R') {
+		num = 0;
+	}
+	else if (key == 'x') {
+		if (cyRotate<1) cyRotate += 0.1;
+	}
+	else if (key == 'X') {
+		if (cyRotate>-1) cyRotate -= 0.1;
+	}
+	else if (key == 'y') {
+		if (cxRotate<1) cxRotate += 0.1;
+	}
+	else if (key == 'Y') {
+		if (cxRotate>-1) cxRotate -= 0.1;
+	}
+	else if (key == 'z') {
+		czRotate += 1;
+	}
+	else if (key == 'Z') {
+		czRotate -= 1;
+	}
+	glutPostRedisplay();
 }
 
+void TimerFunction(int value)
+{
+	glutPostRedisplay();
+	glutTimerFunc(100, TimerFunction, 1);
+}
 
-
-void vMenuFunc(int iBt) {
-
-	switch (iBt) {
-
-	default:
-
-	case 1:
-
-		bDepth = true;
-
-		break;
-
-	case 2:
-
-		bDepth = false;
-
-		break;
-
-
-
-	case 3:
-
-		bCulling = true;
-
-		break;
-
-	case 4:
-
-		bCulling = false;
-
-		break;
-
-
-
-	case 5:
-
-		bShading = true;
-
-		break;
-
-	case 6:
-
-		bShading = false;
-
-		break;
-
-
-
-	case 7:
-
-		bTop = true;
-
-		break;
-
-	case 8:
-
-		bTop = false;
-
-		break;
-
-	case 9:
-
-		bBottom = true;
-
-		break;
-
-	case 10:
-
-		bBottom = false;
-
-		break;
-
-	}
+void SpecialKeyboard(int key, int x, int y) {
 
 	glutPostRedisplay();
+}
+
+void Mouse(int button, int state, int x, int y)
+{
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		for (int i = num; i < 22; ++i)
+		{
+			ctrlpoints[i][0] = x;
+			ctrlpoints[i][1] = y;
+			ctrlpoints[i][2] = 0;
+		}
+		++num;
+		if (num > 20) num = 0;
+	}
 
 }

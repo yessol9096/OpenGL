@@ -33,8 +33,9 @@ bool rotateZ = false;
 
 int random;
 
+GLfloat ctrlpoints[20][20][20] = { { 0,0,0 } };
 
-
+int num = 0;
 enum class b_Dir {
 	x,
 	z,
@@ -52,13 +53,32 @@ public:
 	GLfloat y = 0;
 	GLfloat z = 0;
 	GLfloat size = 100.0;
-
+	
 	void draw() {
 		glColor3f(1, 0.8, 0.0);
 		glPushMatrix();
-		glTranslatef(0, -100, 0);
-		glScalef(1.0, 0.1, 1.0);
-		glutSolidCube(300);
+
+		if (num > 1)
+		{
+			for (int i = 0; i < num; i += 3)
+			{
+				int n = num;
+				if (num > 3) n = 4;
+				glColor3f(0.0, 1.0, 0.0);
+				glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &ctrlpoints[0][0][0]);
+				glEnable(GL_MAP2_VERTEX_3);
+				// 제어점 사이의 곡선위의 점들을 계산한다. 제어점 사이를 10개로 나누어 그 점들을 연결한다.  곡선위의 점 계산
+				glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0); // 매개변수 0~1 사이를 10개로 나눔
+				glEvalMesh2(GL_LINE, 0, 10, 0, 10);
+				glDisable(GL_MAP2_VERTEX_3);
+			}
+		}
+		// 제어점에 점을 그린다.
+		glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+		glBegin(GL_POINTS);
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++)
+				glVertex3fv(ctrlpoints[i][j]);
 		glPopMatrix();
 	}
 
@@ -396,23 +416,6 @@ void DrawScene()
 	torus.draw();
 	cone.draw();
 
-	// 3차원 상의 제어점 설정
-	GLfloat ctrlpoints[3][3][3] = { { { -4.0, 0.0, 4.0 },{ -2.0, 4.0, 4.0 },{ 4.0, 0.0, 4.0 } },
-	{ { -4.0, 0.0, 0.0 },{ -2.0, 4.0, 0.0 },{ 4.0, 0.0, 0.0 } },
-	{ { -4.0, 0.0, -4.0 },{ -2.0, 4.0, -4.0 },{ 4.0, 0.0, -4.0 } } };
-	// 곡면 제어점 설정
-	glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 3, 0.0, 1.0, 9, 3, &ctrlpoints[0][0][0]);
-	glEnable(GL_MAP2_VERTEX_3);
-	// 그리드를 이용한 곡면 드로잉
-	glMapGrid2f(10, 0.0, 1.0, 10, 0.0, 1.0);
-	// 선을 이용하여 그리드 연결
-	glEvalMesh2(GL_LINE, 0, 10, 0, 10);
-	glPointSize(2.0); glColor3f(0.0, 0.0, 1.0);
-	glBegin(GL_POINTS);
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-			glVertex3fv(ctrlpoints[i][j]);
-	glEnd();
 
 	glPopMatrix();
 	glutSwapBuffers(); // 결과 출력
