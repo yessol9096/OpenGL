@@ -1,5 +1,1 @@
-﻿실습35.obj : error LNK2005: "void __cdecl Keyboard(unsigned char,int,int)" (?Keyboard@@YAXEHH@Z)이(가) 실습32.obj에 이미 정의되어 있습니다.
-실습35.obj : error LNK2005: "void __cdecl Reshape(int,int)" (?Reshape@@YAXHH@Z)이(가) 실습32.obj에 이미 정의되어 있습니다.
-실습35.obj : error LNK2005: "void __cdecl TimerFunction(int)" (?TimerFunction@@YAXH@Z)이(가) 실습32.obj에 이미 정의되어 있습니다.
-실습35.obj : error LNK2005: _main이(가) 실습32.obj에 이미 정의되어 있습니다.
-C:\Users\dpthf\Documents\GitHub\OpenGL\컴그실습\Debug\컴그실습.exe : fatal error LNK1169: 여러 번 정의된 기호가 있습니다.
+﻿  컴그실습.vcxproj -> C:\Users\dpthf\Documents\GitHub\OpenGL\컴그실습\Debug\컴그실습.exe
