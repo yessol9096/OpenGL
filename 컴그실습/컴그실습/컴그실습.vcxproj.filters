@@ -108,5 +108,25 @@
     <ClCompile Include="실습30.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="실습32.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="실습35.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="image1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="1.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="2.bmp">
+      <Filter>리소스 파일</Filter>
+    </Image>
   </ItemGroup>
 </Project>

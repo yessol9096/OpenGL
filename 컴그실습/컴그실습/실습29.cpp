@@ -8,42 +8,43 @@ void UpdateCam();
 
 int culling = 1;
 // 조명
-void Light1();
-void Light2();
 
-float L1_Ambient = 0.5;
+float L1_Ambient1 = 0.5;
 float L1_Ambient2 = 0.5;
 float L1_Ambient3 = 0.5;
 
-float L1_DiffuseLight1 = 1.0;
-float L1_DiffuseLight2 = 0.0;
-float L1_DiffuseLight3 = 0.0;
+float L1_Diffuse1 = 1.0;
+float L1_Diffuse2 = 0.0;
+float L1_Diffuse3 = 0.0;
 
-float L2_Ambient = 0.5;
+float L2_Ambient1 = 0.5;
 float L2_Ambient2 = 0.5;
 float L2_Ambient3 = 0.5;
 
-float L2_DiffuseLight1 = 0.0;
-float L2_DiffuseLight2 = 1.0;
-float L2_DiffuseLight3 = 0.0;
+float L2_Diffuse1 = 0.0;
+float L2_Diffuse2 = 1.0;
+float L2_Diffuse3 = 0.0;
 
-float fDiffuse = 0.1;
-float fSpecular = 0.1;
+float Specular = 0.5f;
 
 GLfloat lightpos[] = { -400, 200, -500, 1 };
 GLfloat lightpos2[] = { 400, 200, -500, 1 };
 
-GLfloat L1_AmbientLight[] = { L1_Ambient, L1_Ambient2, L1_Ambient3, 1.0f };
-GLfloat L1_DiffuseLight[] = { L1_DiffuseLight1, L1_DiffuseLight2, L1_DiffuseLight3, 1.0f };
+GLfloat L1_AmbientLight[] = { L1_Ambient1, L1_Ambient2, L1_Ambient3, 1.0f };
+GLfloat L1_DiffuseLight[] = { L1_Diffuse1, L1_Diffuse2, L1_Diffuse3, 1.0f };
 
-GLfloat L2_AmbientLight[] = { L2_Ambient, L2_Ambient2, L2_Ambient3, 1.0f };
-GLfloat L2_DiffuseLight[] = { L2_DiffuseLight1, L2_DiffuseLight2, L2_DiffuseLight3, 1.0f };
-GLfloat SpecularLight[] = { 1.0, 1.0, 1.0, 1.0 };
+GLfloat L2_AmbientLight[] = { L2_Ambient1, L2_Ambient2, L2_Ambient3, 1.0f };
+GLfloat L2_DiffuseLight[] = { L2_Diffuse1, L2_Diffuse2, L2_Diffuse3, 1.0f };
 
+GLfloat SpecularLight[] = { Specular, Specular, Specular, 1.0 };
+
+void Light1();
+void Light2();
 
 GLdouble cyRotate = 0.1;
 GLdouble cxRotate = 0.0;
 GLdouble czRotate = 0.0;
+
 float angle = 0.0;
 float bangle = 0.0;
 
@@ -227,6 +228,9 @@ public:
 
 		glPushMatrix();
 		glColor3f(0.0f, 0.4f, 0.4f);
+		GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+		glMateriali(GL_FRONT, GL_SHININESS, 128);
 		glTranslatef(-150, -25, 300);
 		glutSolidSphere(size, 20, 10);
 		glPopMatrix();
@@ -289,8 +293,6 @@ public:
 	int dir = 0;
 public:
 	void draw() {
-
-
 		glPushMatrix();
 		glColor3f(0.5f, 0.0f, 0.4f);
 		glTranslatef(-150, -105, 50);
@@ -464,7 +466,10 @@ public:
 
 	void draw() {
 		glPushMatrix();
-
+		GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gray);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+		glMateriali(GL_FRONT, GL_SHININESS, 128);
 		glTranslatef(x, -80, z);
 		{
 			for (int j = 0; j < 360; ++j) {
@@ -531,7 +536,14 @@ void DrawScene()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);      // 조명 활성화
 	glEnable(GL_COLOR_MATERIAL);
-	glEnable(GL_NORMALIZE);
+	//glEnable(GL_NORMALIZE);
+
+	
+	GLfloat specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, gray);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
+	glMateriali(GL_FRONT, GL_SHININESS, 128);
+	
 	if (L1_switch)
 	{
 		glEnable(GL_LIGHT0);
@@ -596,13 +608,13 @@ void Reshape(int w, int h)
 	glLoadIdentity();
 	// 원근 투영을 사용하는 경우:
 	gluPerspective(60.0, 600 / 400, 1.0, 1000.0);
-	glTranslatef(0.0, 0.0, -300.0);
+	glTranslatef(0.0, 0.0, 300.0);
 	// glOrtho (0.0, 800.0, 0.0, 600.0, -1.0, 1.0);
 	// 모델링 변환 설정: 디스플레이 콜백 함수에서 모델 변환 적용하기 위하여 Matrix mode 저장
 	// 관측 변환: 카메라의 위치 설정 (필요한 경우, 다른 곳에 설정 가능)
 	gluLookAt
 	(
-		0.0, 0.5, 0.0,
+		0.0, 0.5, 200.0,
 		0.0, 0.0, 1.0,
 		0.0, 1.0, 0.0
 	);
@@ -640,27 +652,78 @@ void Keyboard(unsigned char key, int x, int y)
 		else if (L2_switch == false)L2_switch = true;
 	}
 	else if (key == 'a') {
-		L1_Ambient += 0.1f;
-		L1_Ambient2 += 0.1f;
-		L1_Ambient3 += 0.1f;
-	}
-	else if (key == 'A') {
-		L1_Ambient -= 0.1f;
+		L1_Ambient1 -= 0.1f;
 		L1_Ambient2 -= 0.1f;
 		L1_Ambient3 -= 0.1f;
+		L1_AmbientLight[0] = L1_Ambient1;
+		L1_AmbientLight[1] = L1_Ambient2;
+		L1_AmbientLight[2] = L1_Ambient3;
+
+		L2_Ambient1 -= 0.1f;
+		L2_Ambient2 -= 0.1f;
+		L2_Ambient3 -= 0.1f;
+		L2_AmbientLight[0] = L2_Ambient1;
+		L2_AmbientLight[1] = L2_Ambient2;
+		L2_AmbientLight[2] = L2_Ambient3;
 	}
-	else if (key == 'd') {
-		L1_DiffuseLight1 += 0.1;
-		L1_DiffuseLight2 += 0.1;
-		L1_DiffuseLight3 += 0.1;
+	else if (key == 'A') {
+		L1_Ambient1 += 0.1f;
+		L1_Ambient2 += 0.1f;
+		L1_Ambient3 += 0.1f;
+		L1_AmbientLight[0] = L1_Ambient1;
+		L1_AmbientLight[1] = L1_Ambient2;
+		L1_AmbientLight[2] = L1_Ambient3;
+
+		L2_Ambient1 += 0.1f;
+		L2_Ambient2 += 0.1f;
+		L2_Ambient3 += 0.1f;
+		L2_AmbientLight[0] = L2_Ambient1;
+		L2_AmbientLight[1] = L2_Ambient2;
+		L2_AmbientLight[2] = L2_Ambient3;
+	}
+	else if (key == 'd') {	
+		L1_Diffuse1 -= 0.1;
+		L1_Diffuse2 -= 0.1;
+		L1_Diffuse3 -= 0.1;
+		L1_DiffuseLight[0] = L1_Diffuse1;
+		L1_DiffuseLight[1] = L1_Diffuse2;
+		L1_DiffuseLight[2] = L1_Diffuse3;
+
+		L2_Diffuse1 -= 0.1;
+		L2_Diffuse2 -= 0.1;
+		L2_Diffuse3 -= 0.1;
+		L2_DiffuseLight[0] = L2_Diffuse1;
+		L2_DiffuseLight[1] = L2_Diffuse2;
+		L2_DiffuseLight[2] = L2_Diffuse3;
+		
 	}
 	else if (key == 'D') {
-		L1_DiffuseLight1 -= 0.1;
-		L1_DiffuseLight2 -= 0.1;
-		L1_DiffuseLight3 -= 0.1;
+		L1_Diffuse1 += 0.1;
+		L1_Diffuse2 += 0.1;
+		L1_Diffuse3 += 0.1;
+		L1_DiffuseLight[0] = L1_Diffuse1;
+		L1_DiffuseLight[1] = L1_Diffuse2;
+		L1_DiffuseLight[2] = L1_Diffuse3;
+
+		L2_Diffuse1 += 0.1;
+		L2_Diffuse2 += 0.1;
+		L2_Diffuse3 += 0.1;
+		L2_DiffuseLight[0] = L2_Diffuse1;
+		L2_DiffuseLight[1] = L2_Diffuse2;
+		L2_DiffuseLight[2] = L2_Diffuse3;
+	
 	}
 	else if (key == 's') {
-		czRotate -= 1;
+		Specular -= 0.1f;
+		SpecularLight[0] = Specular;
+		SpecularLight[1] = Specular;
+		SpecularLight[2] = Specular;
+	}
+	else if (key == 'S') {
+		Specular += 0.1f;
+		SpecularLight[0] = Specular;
+		SpecularLight[1] = Specular;
+		SpecularLight[2] = Specular;
 	}
 	glutPostRedisplay(); // 화면 재출력을 위하여 디스플레이 콜백 함수 호출
 }
